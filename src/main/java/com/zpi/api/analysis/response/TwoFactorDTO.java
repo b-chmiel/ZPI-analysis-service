@@ -1,6 +1,6 @@
-package com.zpi.api.analysis;
+package com.zpi.api.analysis.response;
 
-import com.zpi.domain.analysis.TwoFactorResponse;
+import com.zpi.domain.analysis.response.TwoFactorResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,9 +13,5 @@ public class TwoFactorDTO {
 
     public TwoFactorDTO(TwoFactorResponse response) {
         additionalLayerRequired = response.isAdditionalLayerRequired();
-    }
-
-    public TwoFactorResponse toDomain() {
-        return new TwoFactorResponse(additionalLayerRequired);
     }
 }

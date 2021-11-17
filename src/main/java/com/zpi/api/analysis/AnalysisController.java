@@ -1,5 +1,7 @@
 package com.zpi.api.analysis;
 
+import com.zpi.api.analysis.request.AnalysisRequestDTO;
+import com.zpi.api.analysis.response.AnalysisResponseDTO;
 import com.zpi.domain.analysis.AnalysisService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

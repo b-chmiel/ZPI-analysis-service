@@ -1,6 +1,6 @@
-package com.zpi.api.analysis;
+package com.zpi.api.analysis.request;
 
-import com.zpi.domain.analysis.AnalysisRequest;
+import com.zpi.domain.analysis.request.AnalysisRequest;
 import lombok.Builder;
 import lombok.Getter;
 

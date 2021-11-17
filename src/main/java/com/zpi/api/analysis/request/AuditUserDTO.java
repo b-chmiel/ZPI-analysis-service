@@ -1,6 +1,6 @@
-package com.zpi.api.analysis;
+package com.zpi.api.analysis.request;
 
-import com.zpi.domain.analysis.AuditUser;
+import com.zpi.domain.analysis.request.AuditUser;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

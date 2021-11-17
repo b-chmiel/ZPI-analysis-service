@@ -1,8 +1,7 @@
-package com.zpi.api.analysis;
+package com.zpi.api.analysis.request;
 
-import com.zpi.domain.analysis.IpInfo;
+import com.zpi.domain.analysis.request.IpInfo;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 
 @Getter

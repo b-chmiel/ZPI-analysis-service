@@ -1,11 +1,12 @@
-package com.zpi.domain.analysis;
+package com.zpi.api.analysis.request;
 
+import com.zpi.domain.analysis.request.DeviceInfo;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor
-public class DeviceInfo {
+@AllArgsConstructor
+public class DeviceInfoDTO {
     private final String fingerprint;
     private final String userAgent;
     private final String browser;
@@ -34,4 +35,37 @@ public class DeviceInfo {
     private final String systemLanguage;
     private final boolean isCanvas;
     private final String canvasPrint;
+
+    public DeviceInfo toDomain() {
+        return new DeviceInfo(
+                fingerprint,
+                userAgent,
+                browser,
+                engine,
+                engineVersion,
+                OS,
+                OSVersion,
+                device,
+                deviceType,
+                deviceVendor,
+                CPU,
+                screenPrint,
+                colorDepth,
+                currentResolution,
+                availableResolution,
+                deviceXDPI,
+                deviceYDPI,
+                mimeTypes,
+                isFont,
+                fonts,
+                isLocalStorage,
+                isSessionStorage,
+                isCookie,
+                timeZone,
+                language,
+                systemLanguage,
+                isCanvas,
+                canvasPrint
+        );
+    }
 }

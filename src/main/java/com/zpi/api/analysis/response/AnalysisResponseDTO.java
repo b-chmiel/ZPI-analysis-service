@@ -1,6 +1,6 @@
-package com.zpi.api.analysis;
+package com.zpi.api.analysis.response;
 
-import com.zpi.domain.analysis.AnalysisResponse;
+import com.zpi.domain.analysis.response.AnalysisResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -11,7 +11,7 @@ public class AnalysisResponseDTO {
     private final TwoFactorDTO twoFactor;
 
     public AnalysisResponseDTO(AnalysisResponse result) {
-        loginFailed = new LoginFailedDTO(result.getLoginFailed());
-        twoFactor = new TwoFactorDTO(result.getTwoFactor());
+        loginFailed = new LoginFailedDTO(result.loginFailed());
+        twoFactor = new TwoFactorDTO(result.twoFactor());
     }
 }
