@@ -1,6 +1,6 @@
 package com.zpi.infrastructure.analysis;
 
-import com.zpi.domain.analysis.request.AnalysisRequest;
+import com.zpi.domain.common.AnalysisRequest;
 import lombok.*;
 import org.hibernate.Hibernate;
 
@@ -18,7 +18,7 @@ import java.util.Objects;
 @Table(name = "REQUEST_METADATA")
 class RequestTuple {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @ManyToOne(cascade = CascadeType.ALL)
@@ -32,11 +32,11 @@ class RequestTuple {
     @Temporal(TemporalType.TIMESTAMP)
     private Date datetime;
 
-    RequestTuple(AnalysisRequest request) {
-        ipInfo = new IpInfoTuple(request.ipInfo());
-        deviceInfo = new DeviceInfoTuple(request.deviceInfo());
-        user = new UserTuple(request.user());
-        datetime = new Date();
+    RequestTuple(IpInfoTuple ipInfo, DeviceInfoTuple deviceInfo, UserTuple user, Date date) {
+        this.ipInfo = ipInfo;
+        this.deviceInfo = deviceInfo;
+        this.user = user;
+        this.datetime = date;
     }
 
     @Override
@@ -53,10 +53,11 @@ class RequestTuple {
     }
 
     public static AnalysisRequest toDomain(RequestTuple requestTuple) {
+        var date = requestTuple.getDatetime();
         var ipInfo = requestTuple.getIpInfo().toDomain();
         var deviceInfo = requestTuple.getDeviceInfo().toDomain();
         var user = requestTuple.getUser().toDomain();
-        return new AnalysisRequest(ipInfo, deviceInfo, user);
+        return new AnalysisRequest(date,ipInfo, deviceInfo, user);
     }
 }
 

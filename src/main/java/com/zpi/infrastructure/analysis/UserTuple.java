@@ -1,13 +1,11 @@
 package com.zpi.infrastructure.analysis;
 
-import com.zpi.domain.analysis.request.User;
+import com.zpi.domain.common.User;
 import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @Setter
@@ -19,15 +17,15 @@ import java.util.Set;
 @Table(name = "USER_INFO")
 class UserTuple {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-//    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false)
     private String username;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @ToString.Exclude
-    private Set<RequestTuple> requests = new HashSet<>();
+    private List<RequestTuple> requests = new ArrayList<>();
 
     UserTuple(User user) {
         this.username = user.username();

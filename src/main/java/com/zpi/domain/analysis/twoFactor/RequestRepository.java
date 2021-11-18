@@ -1,7 +1,7 @@
 package com.zpi.domain.analysis.twoFactor;
 
-import com.zpi.domain.analysis.request.AnalysisRequest;
-import com.zpi.domain.analysis.request.User;
+import com.zpi.domain.common.AnalysisRequest;
+import com.zpi.domain.common.User;
 
 import java.util.Optional;
 

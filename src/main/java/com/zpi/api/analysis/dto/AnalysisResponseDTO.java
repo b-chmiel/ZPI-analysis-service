@@ -1,4 +1,4 @@
-package com.zpi.api.analysis.response;
+package com.zpi.api.analysis.dto;
 
 import com.zpi.domain.analysis.response.AnalysisResponse;
 import lombok.AllArgsConstructor;

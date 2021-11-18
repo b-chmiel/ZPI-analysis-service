@@ -1,4 +1,4 @@
-package com.zpi.domain.analysis.request;
+package com.zpi.domain.common;
 
 
 import lombok.EqualsAndHashCode;

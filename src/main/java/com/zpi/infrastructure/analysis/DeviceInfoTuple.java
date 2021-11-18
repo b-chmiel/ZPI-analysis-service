@@ -1,14 +1,15 @@
 package com.zpi.infrastructure.analysis;
 
-import com.zpi.domain.analysis.request.DeviceInfo;
+import com.zpi.domain.common.DeviceInfo;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -20,10 +21,10 @@ import java.util.Set;
 @Table(name = "DEVICE_INFO")
 class DeviceInfoTuple {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    //    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false)
     private String fingerprint;
     private String userAgent;
     private String browser;
@@ -54,7 +55,7 @@ class DeviceInfoTuple {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Fetch(value = FetchMode.SUBSELECT)
     @ToString.Exclude
-    private Set<RequestTuple> requests;
+    private List<RequestTuple> requests = new ArrayList<>();
 
     DeviceInfoTuple(DeviceInfo info) {
         this.fingerprint = info.fingerprint();

@@ -1,14 +1,15 @@
 package com.zpi.infrastructure.analysis;
 
-import com.zpi.domain.analysis.request.IpInfo;
+import com.zpi.domain.common.IpInfo;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -20,7 +21,7 @@ import java.util.Set;
 @Table(name = "IP_INFO")
 class IpInfoTuple {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     //    @Column(unique = true, nullable = false)
@@ -36,7 +37,7 @@ class IpInfoTuple {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Fetch(value = FetchMode.SUBSELECT)
     @ToString.Exclude
-    private Set<RequestTuple> requests;
+    private List<RequestTuple> requests = new ArrayList<>();
 
     IpInfoTuple(IpInfo info) {
         this.fingerprint = info.getFingerprint();

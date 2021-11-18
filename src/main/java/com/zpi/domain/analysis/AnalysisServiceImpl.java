@@ -1,10 +1,11 @@
 package com.zpi.domain.analysis;
 
-import com.zpi.domain.analysis.request.AnalysisRequest;
+import com.zpi.domain.common.AnalysisRequest;
 import com.zpi.domain.analysis.response.AnalysisResponse;
 import com.zpi.domain.analysis.response.LoginAction;
 import com.zpi.domain.analysis.response.LoginFailedResponse;
 import com.zpi.domain.analysis.twoFactor.TwoFactorService;
+import com.zpi.domain.common.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
