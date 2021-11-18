@@ -9,7 +9,7 @@ import lombok.Getter;
 public class AnalysisRequestDTO {
     private final IpInfoDTO ipInfo;
     private final DeviceInfoDTO deviceInfo;
-    private final AuditUserDTO user;
+    private final UserDTO user;
 
     public AnalysisRequest toDomain() {
         return new AnalysisRequest(ipInfo.toDomain(), deviceInfo.toDomain(), user.toDomain());

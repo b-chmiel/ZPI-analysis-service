@@ -53,19 +53,11 @@ public class DeviceInfoDTO {
                 colorDepth,
                 currentResolution,
                 availableResolution,
-                deviceXDPI,
-                deviceYDPI,
                 mimeTypes,
-                isFont,
                 fonts,
-                isLocalStorage,
-                isSessionStorage,
-                isCookie,
                 timeZone,
                 language,
-                systemLanguage,
-                isCanvas,
-                canvasPrint
+                systemLanguage
         );
     }
 }

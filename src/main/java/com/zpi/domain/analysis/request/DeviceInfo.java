@@ -16,18 +16,10 @@ public record DeviceInfo(
         String colorDepth,
         String currentResolution,
         String availableResolution,
-        String deviceXDPI,
-        String deviceYDPI,
         String mimeTypes,
-        boolean isFont,
         String fonts,
-        boolean isLocalStorage,
-        boolean isSessionStorage,
-        boolean isCookie,
         String timeZone,
         String language,
-        String systemLanguage,
-        boolean isCanvas,
-        String canvasPrint
+        String systemLanguage
 ) {
 }
