@@ -1,10 +1,12 @@
-package com.zpi.domain.analysis.twoFactor;
+package com.zpi.domain.analysis.twoFactor.incident;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.List;
 
 @Getter
+@AllArgsConstructor
 public class Incident {
     private final List<IncidentType> type;
     private final IncidentSeverity severity;

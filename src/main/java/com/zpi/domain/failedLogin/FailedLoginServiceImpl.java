@@ -1,8 +1,8 @@
 package com.zpi.domain.failedLogin;
 
-import com.zpi.domain.analysis.twoFactor.Incident;
-import com.zpi.domain.analysis.twoFactor.IncidentRepository;
-import com.zpi.domain.analysis.twoFactor.IncidentType;
+import com.zpi.domain.analysis.twoFactor.incident.Incident;
+import com.zpi.domain.analysis.twoFactor.incident.IncidentRepository;
+import com.zpi.domain.analysis.twoFactor.incident.IncidentType;
 import com.zpi.domain.common.AnalysisRequest;
 import com.zpi.domain.common.UserRepository;
 import lombok.RequiredArgsConstructor;

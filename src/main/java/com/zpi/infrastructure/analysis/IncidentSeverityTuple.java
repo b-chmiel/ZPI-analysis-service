@@ -1,6 +1,6 @@
 package com.zpi.infrastructure.analysis;
 
-import com.zpi.domain.analysis.twoFactor.IncidentSeverity;
+import com.zpi.domain.analysis.twoFactor.incident.IncidentSeverity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -15,5 +15,9 @@ enum IncidentSeverityTuple {
 
     static IncidentSeverityTuple from(IncidentSeverity severity) {
         return IncidentSeverityTuple.valueOf(severity.name());
+    }
+
+    static IncidentSeverity toDomain(IncidentSeverityTuple severity) {
+       return IncidentSeverity.valueOf(severity.getName());
     }
 }

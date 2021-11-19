@@ -1,7 +1,6 @@
 package com.zpi.domain.analysis
 
-
-import com.zpi.domain.analysis.lockoutService.LockoutService
+import com.zpi.domain.analysis.lockout.LockoutService
 import com.zpi.domain.analysis.response.LoginAction
 import com.zpi.domain.analysis.response.LoginFailedResponse
 import com.zpi.domain.analysis.response.TwoFactorResponse

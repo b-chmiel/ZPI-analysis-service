@@ -1,6 +1,6 @@
 package com.zpi.infrastructure.analysis;
 
-import com.zpi.domain.analysis.twoFactor.Incident;
+import com.zpi.domain.analysis.twoFactor.incident.Incident;
 import lombok.*;
 import org.hibernate.Hibernate;
 
@@ -48,5 +48,11 @@ class IncidentTuple {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    public static Incident toDomain(IncidentTuple incidentTuple) {
+        var types = incidentTuple.getType().stream().map(IncidentTypeTuple::toDomain).collect(Collectors.toList());
+        var severity = IncidentSeverityTuple.toDomain(incidentTuple.getSeverity());
+        return new Incident(types, severity);
     }
 }

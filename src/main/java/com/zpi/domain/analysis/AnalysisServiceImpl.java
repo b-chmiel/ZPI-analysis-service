@@ -1,6 +1,6 @@
 package com.zpi.domain.analysis;
 
-import com.zpi.domain.analysis.lockoutService.LockoutService;
+import com.zpi.domain.analysis.lockout.LockoutService;
 import com.zpi.domain.analysis.response.AnalysisResponse;
 import com.zpi.domain.analysis.twoFactor.TwoFactorService;
 import com.zpi.domain.common.AnalysisRequest;

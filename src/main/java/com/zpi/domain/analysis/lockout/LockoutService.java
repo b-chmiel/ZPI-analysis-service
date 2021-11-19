@@ -1,4 +1,4 @@
-package com.zpi.domain.analysis.lockoutService;
+package com.zpi.domain.analysis.lockout;
 
 import com.zpi.domain.analysis.response.LoginFailedResponse;
 import com.zpi.domain.common.AnalysisRequest;

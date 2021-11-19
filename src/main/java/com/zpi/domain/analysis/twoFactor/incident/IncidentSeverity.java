@@ -1,4 +1,4 @@
-package com.zpi.domain.analysis.twoFactor;
+package com.zpi.domain.analysis.twoFactor.incident;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

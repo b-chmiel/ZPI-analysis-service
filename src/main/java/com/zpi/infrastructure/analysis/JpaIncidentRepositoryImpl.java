@@ -1,7 +1,7 @@
 package com.zpi.infrastructure.analysis;
 
-import com.zpi.domain.analysis.twoFactor.Incident;
-import com.zpi.domain.analysis.twoFactor.IncidentRepository;
+import com.zpi.domain.analysis.twoFactor.incident.Incident;
+import com.zpi.domain.analysis.twoFactor.incident.IncidentRepository;
 import com.zpi.domain.common.AnalysisRequest;
 import com.zpi.domain.common.User;
 import lombok.RequiredArgsConstructor;
@@ -26,10 +26,10 @@ public class JpaIncidentRepositoryImpl implements IncidentRepository {
     }
 
     @Override
-    public boolean isLastRequestIncident(User user) {
+    public Optional<Incident> lastIncident(User user) {
         var userTuple = userRepo.findByUsername(user.username());
         if (userTuple.isEmpty()) {
-            return false;
+            return Optional.empty();
         }
 
         var last = requestRepo.findByOrderByIdDesc()
@@ -37,15 +37,12 @@ public class JpaIncidentRepositoryImpl implements IncidentRepository {
                 .stream()
                 .findFirst();
 
-        return last.filter(
-                requestTuple -> incidentRepo
-                        .findByRequest(requestTuple)
-                        .stream()
-                        .findFirst()
-                        .filter(e -> !e.getType().contains(IncidentTypeTuple.AFTER_INCIDENT)).isPresent()
-        ).isPresent();
-    }
+        if (last.isEmpty()) {
+            return Optional.empty();
+        }
 
+        return incidentRepo.findByRequest(last.get()).map(IncidentTuple::toDomain);
+    }
 
     public interface JpaIncidentRepo extends JpaRepository<IncidentTuple, Long> {
         Optional<IncidentTuple> findByRequest(RequestTuple request);

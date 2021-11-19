@@ -1,4 +1,4 @@
-package com.zpi.domain.analysis.twoFactor;
+package com.zpi.domain.analysis.twoFactor.incident;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,7 +10,8 @@ public enum IncidentType {
     LOCATION_CHANGE("LOCATION_CHANGE", 0),
     PASSWORD_INCORRECT("PASSWORD_INCORRECT", 0),
     LOCKOUT("LOCKOUT", 2),
-    AFTER_INCIDENT("AFTER_INCIDENT", 1);
+    AFTER_INCIDENT("AFTER_INCIDENT", 1),
+    REQUEST_DESPITE_LOCKOUT("REQUEST_DESPITE_LOCKOUT", 1);
 
     private final String name;
     private final int severity;

@@ -1,10 +1,8 @@
 package com.zpi.infrastructure.analysis
 
 import com.zpi.JpaConfig
-import com.zpi.domain.analysis.twoFactor.Incident
-import com.zpi.domain.analysis.twoFactor.IncidentRepository
-import com.zpi.domain.analysis.twoFactor.IncidentType
 import com.zpi.domain.analysis.twoFactor.RequestRepository
+import com.zpi.domain.analysis.twoFactor.incident.IncidentRepository
 import com.zpi.testUtils.CommonFixtures
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
@@ -13,10 +11,7 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.support.AnnotationConfigContextLoader
 import spock.lang.Specification
 
-import javax.transaction.Transactional
-
 @ActiveProfiles("test")
-@Transactional
 @ContextConfiguration(
         classes = JpaConfig.class,
         loader = AnnotationConfigContextLoader.class
@@ -29,52 +24,58 @@ class IncidentJpaFT extends Specification {
     @Autowired
     private RequestRepository requestRepository
 
-    def "should return false when no incidents happened"() {
+    def "should return empty when no incidents happened"() {
         given:
-            var request = CommonFixtures.analysisRequestDTO()
+            def request = CommonFixtures.analysisRequestDTO()
 
         when:
-            var result = incidentRepository.isLastRequestIncident(request.toDomain().user())
+            def result = incidentRepository.lastIncident(request.toDomain().user())
 
         then:
-            !result
+            result.isEmpty()
     }
 
-    def "should return true when recent incident took place"() {
+    def "should return incident when recent incident took place"() {
         given:
-            var request = CommonFixtures.analysisRequestDTO().toDomain()
-            var incident = CommonFixtures.incident()
-
-        when:
-            incidentRepository.save(incident, request)
-            var result = incidentRepository.isLastRequestIncident(request.user())
-
-        then:
-            result
-    }
-
-    def "should return false when recent incident was AFTER_INCIDENT"() {
-        given:
-            var request = CommonFixtures.analysisRequestDTO().toDomain()
-            var incident = new Incident(List.of(IncidentType.AFTER_INCIDENT))
+            def request = CommonFixtures.analysisRequestDTO().toDomain()
+            def incident = CommonFixtures.incident()
 
         when:
             incidentRepository.save(incident, request)
-            var result = incidentRepository.isLastRequestIncident(request.user())
+            def result = incidentRepository.lastIncident(request.user())
 
         then:
-            !result
+            result.get().getType() == incident.getType()
+            result.get().getSeverity() == incident.getSeverity()
     }
 
-    def "should return false when no incident was, but previously request was saved"() {
+    def "should return empty when no incident was, but previously request was saved"() {
         given:
-            var request = CommonFixtures.analysisRequestDTO().toDomain()
+            def request = CommonFixtures.analysisRequestDTO().toDomain()
 
         when:
             requestRepository.save(request)
-            var result = incidentRepository.isLastRequestIncident(request.user())
+            def result = incidentRepository.lastIncident(request.user())
 
         then:
-            !result
+            result.isEmpty()
+    }
+
+    def "should return incident when some requests took place"() {
+        given:
+            def request = CommonFixtures.analysisRequestDTO()
+            def incident = CommonFixtures.incident()
+            def user = request.getUser().toDomain()
+
+        when:
+            requestRepository.save(request.toDomain())
+            requestRepository.save(request.toDomain())
+            requestRepository.save(request.toDomain())
+            incidentRepository.save(incident, request.toDomain())
+            var result = incidentRepository.lastIncident(user)
+
+        then:
+            result.get().getType() == incident.getType()
+            result.get().getSeverity() == incident.getSeverity()
     }
 }
