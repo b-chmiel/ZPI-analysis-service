@@ -1,12 +1,13 @@
 package com.zpi.infrastructure.analysis;
 
-import com.zpi.domain.common.AnalysisRequest;
 import com.zpi.domain.analysis.twoFactor.Incident;
 import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -14,7 +15,6 @@ import java.util.Objects;
 @Entity
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Builder
 @Table(name = "INCIDENT")
 class IncidentTuple {
     @Id
@@ -25,15 +25,16 @@ class IncidentTuple {
     private RequestTuple request;
 
     @Enumerated
-    private IncidentTypeTuple type;
+    @ElementCollection(fetch = FetchType.LAZY)
+    private List<IncidentTypeTuple> type;
 
     @Enumerated
     private IncidentSeverityTuple severity;
 
     IncidentTuple(Incident incident, RequestTuple request) {
         this.request = request;
-        this.type = IncidentTypeTuple.from(incident.type());
-        this.severity = IncidentSeverityTuple.from(incident.severity());
+        this.type = incident.getType().stream().map(IncidentTypeTuple::from).collect(Collectors.toList());
+        this.severity = IncidentSeverityTuple.from(incident.getSeverity());
     }
 
     @Override

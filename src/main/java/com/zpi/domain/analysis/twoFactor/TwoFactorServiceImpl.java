@@ -5,6 +5,8 @@ import com.zpi.domain.common.AnalysisRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -27,31 +29,32 @@ public class TwoFactorServiceImpl implements TwoFactorService {
     }
 
     private Optional<Incident> detectIncident(AnalysisRequest request) {
+        var incidentTypes = new ArrayList<IncidentType>();
+        if (incidentRepository.isLastRequestIncident(request.user())) {
+            incidentTypes.add(IncidentType.AFTER_INCIDENT);
+        }
+
         var lastEntry = requestRepository.retrieveLastEntry(request.user());
 
         if (lastEntry.isEmpty()) {
             return Optional.empty();
         }
+        incidentTypes.addAll(detectMetadataChangeIncident(request, lastEntry.get()));
+        return incidentTypes.size() == 0 ? Optional.empty() : Optional.of(new Incident(incidentTypes));
+    }
 
-        IncidentType type = null;
-        IncidentSeverity severity = null;
+    private List<IncidentType> detectMetadataChangeIncident(AnalysisRequest current, AnalysisRequest previous) {
+        var result = new ArrayList<IncidentType>();
 
-        if (!lastEntry.get().deviceInfo().equals(request.deviceInfo())) {
-            type = IncidentType.DEVICE_CHANGE;
-            severity = IncidentSeverity.MEDIUM;
+        if (!previous.deviceInfo().equals(current.deviceInfo())) {
+            result.add(IncidentType.DEVICE_CHANGE);
         }
 
-        if (!lastEntry.get().ipInfo().equals(request.ipInfo())) {
-            if (type != null) {
-                type = IncidentType.ALL_METADATA_CHANGE;
-                severity = IncidentSeverity.HIGH;
-            } else {
-                type = IncidentType.LOCATION_CHANGE;
-                severity = IncidentSeverity.LOW;
-            }
+        if (!previous.ipInfo().equals(current.ipInfo())) {
+            result.add(IncidentType.LOCATION_CHANGE);
         }
 
-        return type == null ? Optional.empty() : Optional.of(new Incident(type, severity));
+        return result;
     }
 
     private void saveIncident(Incident incident, AnalysisRequest request) {

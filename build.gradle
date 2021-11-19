@@ -2,6 +2,8 @@ plugins {
     id 'org.springframework.boot' version '2.5.6'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
+    id 'groovy'
+    id 'info.solidsoft.pitest' version '1.7.0'
 }
 
 group = 'com'
@@ -10,6 +12,9 @@ sourceCompatibility = '17'
 
 ext {
     openApiUiVersion = '1.5.9'
+    groovyVersion = '3.0.9'
+    spockVersion = '2.1-M2-groovy-3.0'
+    junitVersion = '5.7.2'
 }
 
 configurations {
@@ -34,8 +39,23 @@ dependencies {
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation(platform("org.junit:junit-bom:${junitVersion}"))
+    testImplementation('org.junit.jupiter:junit-jupiter')
+
+    testImplementation("org.spockframework:spock-core:${spockVersion}")
+    testImplementation("org.spockframework:spock-spring:${spockVersion}")
+    testImplementation("org.codehaus.groovy:groovy:${groovyVersion}")
+    testImplementation("org.codehaus.groovy:groovy-json:${groovyVersion}")
+
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
 }
 
 test {
     useJUnitPlatform()
+}
+
+pitest {
+    junit5PluginVersion = '0.12'
 }

@@ -17,14 +17,13 @@ import java.util.Objects;
 @Entity
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Builder
 @Table(name = "IP_INFO")
 class IpInfoTuple {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    //    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false)
     private String fingerprint;
     private String city;
     private String continentCode;

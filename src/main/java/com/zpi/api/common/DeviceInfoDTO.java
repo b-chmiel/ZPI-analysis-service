@@ -49,12 +49,10 @@ public class DeviceInfoDTO {
                 deviceType,
                 deviceVendor,
                 CPU,
-                screenPrint,
                 colorDepth,
                 currentResolution,
                 availableResolution,
                 mimeTypes,
-                fonts,
                 timeZone,
                 language,
                 systemLanguage

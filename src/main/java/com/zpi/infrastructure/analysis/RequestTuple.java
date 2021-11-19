@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.Objects;
 
@@ -14,7 +15,7 @@ import java.util.Objects;
 @ToString
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Builder
+@Transactional
 @Table(name = "REQUEST_METADATA")
 class RequestTuple {
     @Id
@@ -25,7 +26,7 @@ class RequestTuple {
     private IpInfoTuple ipInfo;
     @ManyToOne(cascade = CascadeType.ALL)
     private DeviceInfoTuple deviceInfo;
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @ToString.Exclude
     private UserTuple user;
 
@@ -39,6 +40,14 @@ class RequestTuple {
         this.datetime = date;
     }
 
+    public static AnalysisRequest toDomain(RequestTuple requestTuple) {
+        var date = requestTuple.getDatetime();
+        var ipInfo = requestTuple.getIpInfo().toDomain();
+        var deviceInfo = requestTuple.getDeviceInfo().toDomain();
+        var user = requestTuple.getUser().toDomain();
+        return new AnalysisRequest(date, ipInfo, deviceInfo, user);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -50,14 +59,6 @@ class RequestTuple {
     @Override
     public int hashCode() {
         return getClass().hashCode();
-    }
-
-    public static AnalysisRequest toDomain(RequestTuple requestTuple) {
-        var date = requestTuple.getDatetime();
-        var ipInfo = requestTuple.getIpInfo().toDomain();
-        var deviceInfo = requestTuple.getDeviceInfo().toDomain();
-        var user = requestTuple.getUser().toDomain();
-        return new AnalysisRequest(date,ipInfo, deviceInfo, user);
     }
 }
 

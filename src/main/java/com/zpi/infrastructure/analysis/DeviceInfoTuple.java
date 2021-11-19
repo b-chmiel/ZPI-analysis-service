@@ -17,7 +17,6 @@ import java.util.Objects;
 @Entity
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Builder
 @Table(name = "DEVICE_INFO")
 class DeviceInfoTuple {
     @Id
@@ -36,18 +35,10 @@ class DeviceInfoTuple {
     private String deviceType;
     private String deviceVendor;
     private String CPU;
-
-    @Lob
-    @Column
-    private String screenPrint;
     private String colorDepth;
     private String currentResolution;
     private String availableResolution;
     private String mimeTypes;
-
-    @Lob
-    @Column
-    private String fonts;
     private String timeZone;
     private String language;
     private String systemLanguage;
@@ -69,12 +60,10 @@ class DeviceInfoTuple {
         this.deviceType = info.deviceType();
         this.deviceVendor = info.deviceVendor();
         this.CPU = info.CPU();
-        this.screenPrint = info.screenPrint();
         this.colorDepth = info.colorDepth();
         this.currentResolution = info.currentResolution();
         this.availableResolution = info.availableResolution();
         this.mimeTypes = info.mimeTypes();
-        this.fonts = info.fonts();
         this.timeZone = info.timeZone();
         this.language = info.language();
         this.systemLanguage = info.systemLanguage();
@@ -106,12 +95,10 @@ class DeviceInfoTuple {
                 deviceType,
                 deviceVendor,
                 CPU,
-                screenPrint,
                 colorDepth,
                 currentResolution,
                 availableResolution,
                 mimeTypes,
-                fonts,
                 timeZone,
                 language,
                 systemLanguage

@@ -12,12 +12,10 @@ public record DeviceInfo(
         String deviceType,
         String deviceVendor,
         String CPU,
-        String screenPrint,
         String colorDepth,
         String currentResolution,
         String availableResolution,
         String mimeTypes,
-        String fonts,
         String timeZone,
         String language,
         String systemLanguage

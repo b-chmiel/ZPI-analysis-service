@@ -1,7 +1,6 @@
 package com.zpi.domain.analysis.response;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
-public record LoginFailedResponse(LoginAction action,
-                                  LocalDateTime delayTill) {
+public record LoginFailedResponse(LoginAction action, Date delayTill) {
 }

@@ -5,7 +5,10 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -13,19 +16,21 @@ import java.util.*;
 @Entity
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Builder
 @Table(name = "USER_INFO")
 class UserTuple {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long id;
-
     @Column(unique = true, nullable = false)
     private String username;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<RequestTuple> requests = new ArrayList<>();
+
+    private int failedAttempts = 0;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = true)
+    private Date lockoutTill = null;
 
     UserTuple(User user) {
         this.username = user.username();

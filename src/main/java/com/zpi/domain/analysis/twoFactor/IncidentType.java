@@ -6,10 +6,12 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum IncidentType {
-    DEVICE_CHANGE("DEVICE_CHANGE"),
-    LOCATION_CHANGE("LOCATION_CHANGE"),
-    ALL_METADATA_CHANGE("ALL_METADATA_CHANGE"),
-    PASSWORD_INCORRECT("PASSWORD_INCORRECT");
+    DEVICE_CHANGE("DEVICE_CHANGE", 0),
+    LOCATION_CHANGE("LOCATION_CHANGE", 0),
+    PASSWORD_INCORRECT("PASSWORD_INCORRECT", 0),
+    LOCKOUT("LOCKOUT", 2),
+    AFTER_INCIDENT("AFTER_INCIDENT", 1);
 
     private final String name;
+    private final int severity;
 }
