@@ -19,6 +19,9 @@ import java.util.Objects;
 @Table(name = "USER_INFO")
 class UserTuple {
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long id;
+
     @Column(unique = true, nullable = false)
     private String username;
 

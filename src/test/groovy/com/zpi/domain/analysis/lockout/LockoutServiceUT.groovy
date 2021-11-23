@@ -1,6 +1,6 @@
 package com.zpi.domain.analysis.lockout
 
-import com.zpi.domain.analysis.response.LoginAction
+import com.zpi.domain.common.LockoutMode
 import com.zpi.domain.common.UserRepository
 import com.zpi.testUtils.CommonFixtures
 import spock.lang.Specification
@@ -21,10 +21,10 @@ class LockoutServiceUT extends Specification {
             repository.getLockout(request.user()) >> Optional.empty()
 
         when:
-            def result = service.evaluate(request)
+            def result = service.evaluate(request.user())
 
         then:
-            result.action() == LoginAction.ALLOW
+            result.mode() == LockoutMode.ALLOW
     }
 
     def "should return allow when lockout date passed"() {
@@ -34,10 +34,10 @@ class LockoutServiceUT extends Specification {
             repository.getLockout(request.user()) >> Optional.of(date)
 
         when:
-            def result = service.evaluate(request)
+            def result = service.evaluate(request.user())
 
         then:
-            result.action() == LoginAction.ALLOW
+            result.mode() == LockoutMode.ALLOW
 
         and:
             1 * repository.resetFailedAttempts(request.user())
@@ -50,10 +50,10 @@ class LockoutServiceUT extends Specification {
             repository.getLockout(request.user()) >> Optional.of(date)
 
         when:
-            def result = service.evaluate(request)
+            def result = service.evaluate(request.user())
 
         then:
-            result.action() == LoginAction.BLOCK
+            result.mode() == LockoutMode.BLOCK
             result.delayTill() == date
     }
 }

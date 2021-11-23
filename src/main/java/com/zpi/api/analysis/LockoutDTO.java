@@ -1,6 +1,6 @@
-package com.zpi.api.analysis.dto;
+package com.zpi.api.analysis;
 
-import com.zpi.domain.analysis.response.LoginFailedResponse;
+import com.zpi.domain.common.Lockout;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,13 +11,13 @@ import java.util.Date;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoginFailedDTO {
+class LockoutDTO {
     private String loginAction;
     private String delayTill;
 
-    public LoginFailedDTO(LoginFailedResponse response) {
-        loginAction = response.action().toString();
-        delayTill = convertDate(response.delayTill());
+    LockoutDTO(Lockout lockout) {
+        loginAction = lockout.mode().toString();
+        delayTill = convertDate(lockout.delayTill());
     }
 
     private String convertDate(Date date) {
