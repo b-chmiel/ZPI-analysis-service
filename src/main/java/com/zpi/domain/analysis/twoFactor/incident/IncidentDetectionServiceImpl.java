@@ -23,7 +23,7 @@ public class IncidentDetectionServiceImpl implements IncidentDetectionService {
         var lastEntry = requestRepository.retrieveLastEntry(request.user());
 
         if (lastEntry.isEmpty()) {
-            return Optional.empty();
+            return Optional.of(new Incident(IncidentType.FIRST_LOGIN));
         }
 
         var incidentTypes = new ArrayList<IncidentType>();

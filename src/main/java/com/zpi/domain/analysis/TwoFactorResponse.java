@@ -1,4 +1,4 @@
-package com.zpi.domain.analysis.response;
+package com.zpi.domain.analysis;
 
 public record TwoFactorResponse(boolean isAdditionalLayerRequired) {
 }

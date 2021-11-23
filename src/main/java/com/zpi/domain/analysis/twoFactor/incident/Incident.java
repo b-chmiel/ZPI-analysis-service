@@ -16,6 +16,10 @@ public class Incident {
         this.severity = evaluateSeverity(type);
     }
 
+    public Incident(IncidentType type) {
+        this(List.of(type));
+    }
+
     private static IncidentSeverity evaluateSeverity(List<IncidentType> types) {
         var severityValue = types.stream()
                 .mapToInt(IncidentType::getSeverity)

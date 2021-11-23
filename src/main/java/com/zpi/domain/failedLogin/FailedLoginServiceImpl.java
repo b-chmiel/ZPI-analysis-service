@@ -4,17 +4,17 @@ import com.zpi.domain.analysis.twoFactor.incident.Incident;
 import com.zpi.domain.analysis.twoFactor.incident.IncidentRepository;
 import com.zpi.domain.analysis.twoFactor.incident.IncidentType;
 import com.zpi.domain.common.AnalysisRequest;
+import com.zpi.domain.common.User;
 import com.zpi.domain.common.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class FailedLoginServiceImpl implements FailedLoginService {
-    private static final int SECONDS_LOCKOUT_DELAY = 30;
+    private static final int SECONDS_LOCKOUT_DELAY = 20;
     private final IncidentRepository incidentRepository;
     private final UserRepository userRepository;
 
@@ -22,24 +22,22 @@ public class FailedLoginServiceImpl implements FailedLoginService {
     public void report(AnalysisRequest request) {
         var currentFailedAttempts = userRepository.incrementFailedAttempts(request.user());
 
-        Incident incident = evaluate(request, currentFailedAttempts);
+        var incident = evaluate(request, currentFailedAttempts);
 
         incidentRepository.save(incident, request);
     }
 
     private Incident evaluate(AnalysisRequest request, int currentFailedAttempts) {
-        Incident incident;
         if (currentFailedAttempts >= 3) {
-            handleLockout(request);
-            incident = new Incident(List.of(IncidentType.LOCKOUT));
+            handleLockout(request.user());
+            return new Incident(IncidentType.LOCKOUT);
         } else {
-            incident = new Incident(List.of(IncidentType.PASSWORD_INCORRECT));
+            return new Incident(IncidentType.PASSWORD_INCORRECT);
         }
-        return incident;
     }
 
-    private void handleLockout(AnalysisRequest request) {
+    private void handleLockout(User user) {
         var till = LocalDateTime.now().plusSeconds(SECONDS_LOCKOUT_DELAY);
-        userRepository.applyLockout(request.user(), till);
+        userRepository.applyLockout(user, till);
     }
 }

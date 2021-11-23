@@ -1,37 +1,36 @@
 package com.zpi.domain.analysis
 
 import com.zpi.domain.analysis.lockout.LockoutService
-import com.zpi.domain.analysis.response.LoginAction
-import com.zpi.domain.analysis.response.LoginFailedResponse
-import com.zpi.domain.analysis.response.TwoFactorResponse
 import com.zpi.domain.analysis.twoFactor.TwoFactorService
+import com.zpi.domain.common.Lockout
+import com.zpi.domain.common.LockoutMode
 import com.zpi.testUtils.CommonFixtures
 import spock.lang.Specification
 import spock.lang.Subject
 
 class AnalysisServiceUT extends Specification {
-    def twoFactor = Mock(TwoFactorService)
-    def lockout = Mock(LockoutService)
+    def twoFactorService = Mock(TwoFactorService)
+    def lockoutService = Mock(LockoutService)
 
     @Subject
-    def service = new AnalysisServiceImpl(twoFactor, lockout)
+    def service = new AnalysisServiceImpl(twoFactorService, lockoutService)
 
     def "should return response"() {
         given:
             def request = CommonFixtures.analysisRequestDTO().toDomain()
-            def loginFailedResponse = new LoginFailedResponse(LoginAction.ALLOW, new Date())
+            def lockout = new Lockout(LockoutMode.ALLOW, new Date())
             def twoFactorResponse = new TwoFactorResponse(false)
 
         and:
-            twoFactor.evaluate(request) >> twoFactorResponse
-            lockout.evaluate(request) >> loginFailedResponse
+            twoFactorService.evaluate(request) >> twoFactorResponse
+            lockoutService.evaluate(request.user()) >> lockout
 
         when:
             def result = service.analyse(request)
 
         then:
             result.twoFactor() == twoFactorResponse
-            result.loginFailed().action() == loginFailedResponse.action()
-            result.loginFailed().delayTill() == loginFailedResponse.delayTill()
+            result.lockout().mode() == lockout.mode()
+            result.lockout().delayTill() == lockout.delayTill()
     }
 }

@@ -14,7 +14,7 @@ class IncidentDetectionServiceUT extends Specification {
     @Subject
     def service = new IncidentDetectionServiceImpl(requestRepository, incidentRepository, userRepository)
 
-    def "should not detect incident when no last incident and no last entry"() {
+    def "should detect incident when this is first login"() {
         given:
             def request = CommonFixtures.analysisRequestDTO().toDomain()
 
@@ -26,7 +26,8 @@ class IncidentDetectionServiceUT extends Specification {
             def result = service.detect(request)
 
         then:
-            result.isEmpty()
+            result.get().getType() == List.of(IncidentType.FIRST_LOGIN)
+            result.get().getSeverity() == IncidentSeverity.LOW
     }
 
     def "should not detect incident when no last incident and no device change nor location change"() {

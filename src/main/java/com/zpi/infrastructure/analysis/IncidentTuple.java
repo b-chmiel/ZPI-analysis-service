@@ -24,11 +24,11 @@ class IncidentTuple {
     @OneToOne(cascade = CascadeType.ALL)
     private RequestTuple request;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     @ElementCollection(fetch = FetchType.LAZY)
     private List<IncidentTypeTuple> type;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private IncidentSeverityTuple severity;
 
     IncidentTuple(Incident incident, RequestTuple request) {

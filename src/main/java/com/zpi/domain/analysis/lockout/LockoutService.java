@@ -1,8 +1,8 @@
 package com.zpi.domain.analysis.lockout;
 
-import com.zpi.domain.analysis.response.LoginFailedResponse;
-import com.zpi.domain.common.AnalysisRequest;
+import com.zpi.domain.common.Lockout;
+import com.zpi.domain.common.User;
 
 public interface LockoutService {
-    LoginFailedResponse evaluate(AnalysisRequest request);
+    Lockout evaluate(User user);
 }
