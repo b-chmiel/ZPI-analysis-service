@@ -7,6 +7,8 @@ import com.zpi.domain.common.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +33,7 @@ public class IncidentDetectionServiceImpl implements IncidentDetectionService {
         incidentTypes.addAll(detectRequestDespiteLockout(request.user()));
         incidentTypes.addAll(detectAfterIncidentEvent(request.user()));
         incidentTypes.addAll(detectMetadataChangeIncident(request, lastEntry.get()));
+        incidentTypes.addAll(detectWhenUserExceededDailyLimitOfIncidents(request));
 
         return incidentTypes.size() == 0 ? Optional.empty() : Optional.of(new Incident(incidentTypes));
     }
@@ -69,4 +72,13 @@ public class IncidentDetectionServiceImpl implements IncidentDetectionService {
         return result;
     }
 
+    private List<IncidentType> detectWhenUserExceededDailyLimitOfIncidents(AnalysisRequest request) {
+        var from = Timestamp.valueOf(LocalDateTime.now().minusDays(1));
+        var incidents = incidentRepository.incidentsFromDate(request.user(), from);
+
+        if (incidents.size() > 10) {
+            return List.of(IncidentType.SUSPICIOUS_USER);
+        }
+        return List.of();
+    }
 }

@@ -12,7 +12,8 @@ public enum IncidentType {
     LOCKOUT("LOCKOUT", 2),
     AFTER_INCIDENT("AFTER_INCIDENT", 1),
     REQUEST_DESPITE_LOCKOUT("REQUEST_DESPITE_LOCKOUT", 1),
-    FIRST_LOGIN("FIRST_LOGIN", 0);
+    FIRST_LOGIN("FIRST_LOGIN", 0),
+    SUSPICIOUS_USER("SUSPICIOUS_USER", 1);
 
     private final String name;
     private final int severity;

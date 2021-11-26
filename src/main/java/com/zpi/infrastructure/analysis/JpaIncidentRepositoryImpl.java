@@ -48,6 +48,22 @@ public class JpaIncidentRepositoryImpl implements IncidentRepository {
     }
 
     @Override
+    public List<RequestIncident> incidentsFromDate(User user, Date date) {
+        return incidentRepo
+                .findAll()
+                .stream()
+                .filter(i -> i.getRequest().getDatetime().after(date))
+                .filter(i -> i.getRequest().getUser().getUsername().equals(user.username()))
+                .map(i -> new RequestIncident(
+                        i.getRequest().getDatetime(),
+                        IncidentTuple.toDomain(i),
+                        i.getRequest().getIpInfo().toDomain(),
+                        i.getRequest().getDeviceInfo().toDomain())
+                )
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<RequestIncident> incidents(User user) {
         return incidentRepo
                 .findAll()
