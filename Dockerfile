@@ -5,7 +5,7 @@ WORKDIR /app
 RUN gradle bootJar
 
 FROM debian:11-slim
-RUN apt-get update && apt-get install -y openjdk-17-jre-headless
+RUN apt-get update && apt-get install -y openjdk-17-jre-headless httpie
 EXPOSE 5000
 COPY --from=0 /app/build/libs/*.jar app.jar
 ENTRYPOINT ["java", "-jar", "/app.jar"]

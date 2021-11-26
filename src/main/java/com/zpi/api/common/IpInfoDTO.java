@@ -1,19 +1,21 @@
 package com.zpi.api.common;
 
 import com.zpi.domain.common.IpInfo;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 
-@Getter
-@AllArgsConstructor
-public class IpInfoDTO {
-    private final String city;
-    private final String continentCode;
-    private final String continentName;
-    private final String countryCode;
-    private final String countryName;
-    private final String ipAddress;
-    private final String stateProv;
+public record IpInfoDTO(String city, String continentCode, String continentName,
+                        String countryCode, String countryName, String ipAddress,
+                        String stateProv) {
+    public IpInfoDTO(IpInfo info) {
+        this(
+                info.getCity(),
+                info.getContinentCode(),
+                info.getContinentName(),
+                info.getCountryCode(),
+                info.getCountryName(),
+                info.getIpAddress(),
+                info.getStateProv()
+        );
+    }
 
     public IpInfo toDomain() {
         return new IpInfo(

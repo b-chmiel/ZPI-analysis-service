@@ -7,6 +7,8 @@ import com.zpi.domain.common.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +33,8 @@ public class IncidentDetectionServiceImpl implements IncidentDetectionService {
         incidentTypes.addAll(detectRequestDespiteLockout(request.user()));
         incidentTypes.addAll(detectAfterIncidentEvent(request.user()));
         incidentTypes.addAll(detectMetadataChangeIncident(request, lastEntry.get()));
+        incidentTypes.addAll(detectWhenUserExceedsLimit(request));
+        incidentTypes.addAll(detectWhenCountryExceedsLimit(request));
 
         return incidentTypes.size() == 0 ? Optional.empty() : Optional.of(new Incident(incidentTypes));
     }
@@ -69,4 +73,17 @@ public class IncidentDetectionServiceImpl implements IncidentDetectionService {
         return result;
     }
 
+    private List<IncidentType> detectWhenUserExceedsLimit(AnalysisRequest request) {
+        var from = Timestamp.valueOf(LocalDateTime.now().minusDays(1));
+        var incidents = incidentRepository.incidentsFromDateForUser(request.user(), from);
+
+        return incidents.size() > 10 ? List.of(IncidentType.SUSPICIOUS_USER) : List.of();
+    }
+
+    private List<IncidentType> detectWhenCountryExceedsLimit(AnalysisRequest request) {
+        var from = Timestamp.valueOf(LocalDateTime.now().minusDays(1));
+        var incidents = incidentRepository.incidentsFromDateForCountry(request.ipInfo().getCountryName(), from);
+
+        return incidents.size() > 10 ? List.of(IncidentType.SUSPICIOUS_COUNTRY) : List.of();
+    }
 }

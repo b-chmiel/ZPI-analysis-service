@@ -4,12 +4,15 @@ import com.zpi.domain.analysis.twoFactor.incident.Incident;
 import com.zpi.domain.analysis.twoFactor.incident.IncidentRepository;
 import com.zpi.domain.common.AnalysisRequest;
 import com.zpi.domain.common.User;
+import com.zpi.domain.report.RequestIncident;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.util.Streamable;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class JpaIncidentRepositoryImpl implements IncidentRepository {
@@ -42,6 +45,53 @@ public class JpaIncidentRepositoryImpl implements IncidentRepository {
         }
 
         return incidentRepo.findByRequest(last.get()).map(IncidentTuple::toDomain);
+    }
+
+    @Override
+    public List<RequestIncident> incidentsFromDateForUser(User user, Date date) {
+        return incidentRepo
+                .findAll()
+                .stream()
+                .filter(i -> i.getRequest().getDatetime().after(date))
+                .filter(i -> i.getRequest().getUser().getUsername().equals(user.username()))
+                .map(i -> new RequestIncident(
+                        i.getRequest().getDatetime(),
+                        IncidentTuple.toDomain(i),
+                        i.getRequest().getIpInfo().toDomain(),
+                        i.getRequest().getDeviceInfo().toDomain())
+                )
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<RequestIncident> incidents(User user) {
+        return incidentRepo
+                .findAll()
+                .stream()
+                .filter(i -> i.getRequest().getUser().getUsername().equals(user.username()))
+                .map(i -> new RequestIncident(
+                        i.getRequest().getDatetime(),
+                        IncidentTuple.toDomain(i),
+                        i.getRequest().getIpInfo().toDomain(),
+                        i.getRequest().getDeviceInfo().toDomain())
+                )
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<RequestIncident> incidentsFromDateForCountry(String countryName, Date date) {
+        return incidentRepo
+                .findAll()
+                .stream()
+                .filter(i -> i.getRequest().getDatetime().after(date))
+                .filter(i -> i.getRequest().getIpInfo().getCountryName().equals(countryName))
+                .map(i -> new RequestIncident(
+                        i.getRequest().getDatetime(),
+                        IncidentTuple.toDomain(i),
+                        i.getRequest().getIpInfo().toDomain(),
+                        i.getRequest().getDeviceInfo().toDomain())
+                )
+                .collect(Collectors.toList());
     }
 
     public interface JpaIncidentRepo extends JpaRepository<IncidentTuple, Long> {
