@@ -48,7 +48,7 @@ public class JpaIncidentRepositoryImpl implements IncidentRepository {
     }
 
     @Override
-    public List<RequestIncident> incidentsFromDate(User user, Date date) {
+    public List<RequestIncident> incidentsFromDateForUser(User user, Date date) {
         return incidentRepo
                 .findAll()
                 .stream()
@@ -69,6 +69,22 @@ public class JpaIncidentRepositoryImpl implements IncidentRepository {
                 .findAll()
                 .stream()
                 .filter(i -> i.getRequest().getUser().getUsername().equals(user.username()))
+                .map(i -> new RequestIncident(
+                        i.getRequest().getDatetime(),
+                        IncidentTuple.toDomain(i),
+                        i.getRequest().getIpInfo().toDomain(),
+                        i.getRequest().getDeviceInfo().toDomain())
+                )
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<RequestIncident> incidentsFromDateForCountry(String countryName, Date date) {
+        return incidentRepo
+                .findAll()
+                .stream()
+                .filter(i -> i.getRequest().getDatetime().after(date))
+                .filter(i -> i.getRequest().getIpInfo().getCountryName().equals(countryName))
                 .map(i -> new RequestIncident(
                         i.getRequest().getDatetime(),
                         IncidentTuple.toDomain(i),

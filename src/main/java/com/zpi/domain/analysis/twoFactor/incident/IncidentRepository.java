@@ -13,6 +13,9 @@ public interface IncidentRepository {
 
     Optional<Incident> lastIncident(User user);
 
-    List<RequestIncident> incidentsFromDate(User user, Date date);
+    List<RequestIncident> incidentsFromDateForUser(User user, Date date);
+
     List<RequestIncident> incidents(User user);
+
+    List<RequestIncident> incidentsFromDateForCountry(String countryName, Date date);
 }

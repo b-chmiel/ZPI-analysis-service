@@ -13,7 +13,8 @@ public enum IncidentType {
     AFTER_INCIDENT("AFTER_INCIDENT", 1),
     REQUEST_DESPITE_LOCKOUT("REQUEST_DESPITE_LOCKOUT", 1),
     FIRST_LOGIN("FIRST_LOGIN", 0),
-    SUSPICIOUS_USER("SUSPICIOUS_USER", 1);
+    SUSPICIOUS_USER("SUSPICIOUS_USER", 1),
+    SUSPICIOUS_COUNTRY("SUSPICIOUS_COUNTRY", 1);
 
     private final String name;
     private final int severity;

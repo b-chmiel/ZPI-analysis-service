@@ -33,7 +33,8 @@ public class IncidentDetectionServiceImpl implements IncidentDetectionService {
         incidentTypes.addAll(detectRequestDespiteLockout(request.user()));
         incidentTypes.addAll(detectAfterIncidentEvent(request.user()));
         incidentTypes.addAll(detectMetadataChangeIncident(request, lastEntry.get()));
-        incidentTypes.addAll(detectWhenUserExceededDailyLimitOfIncidents(request));
+        incidentTypes.addAll(detectWhenUserExceedsLimit(request));
+        incidentTypes.addAll(detectWhenCountryExceedsLimit(request));
 
         return incidentTypes.size() == 0 ? Optional.empty() : Optional.of(new Incident(incidentTypes));
     }
@@ -72,13 +73,17 @@ public class IncidentDetectionServiceImpl implements IncidentDetectionService {
         return result;
     }
 
-    private List<IncidentType> detectWhenUserExceededDailyLimitOfIncidents(AnalysisRequest request) {
+    private List<IncidentType> detectWhenUserExceedsLimit(AnalysisRequest request) {
         var from = Timestamp.valueOf(LocalDateTime.now().minusDays(1));
-        var incidents = incidentRepository.incidentsFromDate(request.user(), from);
+        var incidents = incidentRepository.incidentsFromDateForUser(request.user(), from);
 
-        if (incidents.size() > 10) {
-            return List.of(IncidentType.SUSPICIOUS_USER);
-        }
-        return List.of();
+        return incidents.size() > 10 ? List.of(IncidentType.SUSPICIOUS_USER) : List.of();
+    }
+
+    private List<IncidentType> detectWhenCountryExceedsLimit(AnalysisRequest request) {
+        var from = Timestamp.valueOf(LocalDateTime.now().minusDays(1));
+        var incidents = incidentRepository.incidentsFromDateForCountry(request.ipInfo().getCountryName(), from);
+
+        return incidents.size() > 10 ? List.of(IncidentType.SUSPICIOUS_COUNTRY) : List.of();
     }
 }
