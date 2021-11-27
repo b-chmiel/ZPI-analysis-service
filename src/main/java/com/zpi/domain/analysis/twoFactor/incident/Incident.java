@@ -29,7 +29,7 @@ public class Incident {
             case 0, 1 -> {
                 return IncidentSeverity.LOW;
             }
-            case 2 -> {
+            case 2, 3 -> {
                 return IncidentSeverity.MEDIUM;
             }
             default -> {
