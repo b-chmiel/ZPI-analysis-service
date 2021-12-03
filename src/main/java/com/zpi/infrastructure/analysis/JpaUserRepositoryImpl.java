@@ -54,6 +54,16 @@ public class JpaUserRepositoryImpl implements UserRepository {
         return tuple.map(UserTuple::getLockoutTill);
     }
 
+    @Override
+    public Optional<Long> userId(User user) {
+        return userRepo.findByUsername(user.username()).map(UserTuple::getId);
+    }
+
+    @Override
+    public Optional<User> user(String username) {
+        return userRepo.findByUsername(username).map(UserTuple::toDomain);
+    }
+
     public interface JpaUserRepo extends JpaRepository<UserTuple, Long> {
         Optional<UserTuple> findByUsername(String username);
     }

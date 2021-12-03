@@ -16,7 +16,7 @@ public class LockoutController {
 
     @GetMapping
     public ResponseEntity<?> lockoutInfo(@Valid @RequestParam String username) {
-        var result = service.lockoutInfo(new User(username));
+        var result = service.lockoutInfo(new User(username, null));
         return ResponseEntity.ok(new LockoutDTO(result));
     }
 }

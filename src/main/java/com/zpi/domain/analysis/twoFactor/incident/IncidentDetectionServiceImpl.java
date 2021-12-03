@@ -9,7 +9,10 @@ import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +22,7 @@ public class IncidentDetectionServiceImpl implements IncidentDetectionService {
     private final RequestRepository requestRepository;
     private final IncidentRepository incidentRepository;
     private final UserRepository userRepository;
+    private final UserIncidentsRepository userIncidentsRepository;
 
     @Override
     public Optional<Incident> detect(AnalysisRequest request) {
@@ -76,14 +80,65 @@ public class IncidentDetectionServiceImpl implements IncidentDetectionService {
     private List<IncidentType> detectWhenUserExceedsLimit(AnalysisRequest request) {
         var from = Timestamp.valueOf(LocalDateTime.now().minusDays(1));
         var incidents = incidentRepository.incidentsFromDateForUser(request.user(), from);
+        var size = incidents == null ? 0 : incidents.size();
+        return size > userLimit(request.user().username()) ? List.of(IncidentType.SUSPICIOUS_USER) : List.of();
+    }
 
-        return incidents.size() > 10 ? List.of(IncidentType.SUSPICIOUS_USER) : List.of();
+    private int userLimit(String username) {
+        final var defaultLimit = 100;
+        var dateStart = requestRepository.startDate();
+
+        if (dateStart.isPresent()) {
+            var to = LocalDateTime.now();
+            int totalElapsed = getTotalElapsed(dateStart.get(), to);
+
+            if (totalElapsed == 0) {
+                return defaultLimit;
+            }
+
+            var total = userIncidentsRepository.totalIncidents();
+
+            int limit = total / totalElapsed;
+
+            var user = userRepository.user(username);
+            if (user.isPresent()) {
+                limit = (limit + getUserAvgIncidents(to, user)) / 2;
+            }
+
+            System.out.println("Limit: " + limit);
+            return limit;
+        }
+
+        return defaultLimit;
+    }
+
+    private int getUserAvgIncidents(LocalDateTime to, Optional<User> user) {
+        if (user.isPresent()) {
+            var userId = userRepository.userId(user.get());
+            if (userId.isPresent()) {
+                var userElapsed = getTotalElapsed(user.get().from(), to);
+
+                if (userElapsed == 0) {
+                    return 0;
+                }
+
+                return userIncidentsRepository.incidentsForUserId(userId.get()) / userElapsed;
+            }
+        }
+
+        return 0;
+    }
+
+    private int getTotalElapsed(Date dateStart, LocalDateTime to) {
+        var totalFrom = LocalDateTime.ofInstant(dateStart.toInstant(), ZoneId.systemDefault());
+        return (int) totalFrom.until(to, ChronoUnit.MINUTES);
     }
 
     private List<IncidentType> detectWhenCountryExceedsLimit(AnalysisRequest request) {
         var from = Timestamp.valueOf(LocalDateTime.now().minusDays(1));
         var incidents = incidentRepository.incidentsFromDateForCountry(request.ipInfo().getCountryName(), from);
 
-        return incidents.size() > 10 ? List.of(IncidentType.SUSPICIOUS_COUNTRY) : List.of();
+        var size = incidents == null ? 0 : incidents.size();
+        return size > 10 ? List.of(IncidentType.SUSPICIOUS_COUNTRY) : List.of();
     }
 }

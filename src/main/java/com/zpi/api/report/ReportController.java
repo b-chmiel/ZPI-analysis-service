@@ -17,7 +17,7 @@ public class ReportController {
 
     @GetMapping("/incidents")
     public ResponseEntity<?> incidents(@Valid @RequestParam String username) {
-        var result = service.incidents(new User(username));
+        var result = service.incidents(new User(username, null));
         return ResponseEntity.ok(result.stream().map(IncidentsResponseDTO::new));
     }
 }

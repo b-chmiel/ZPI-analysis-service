@@ -32,7 +32,10 @@ class RequestJpaFT extends Specification {
             var result = requestRepository.retrieveLastEntry(request.user())
 
         then:
-            result.get() == request
+            result.get().date() == request.date()
+            result.get().deviceInfo() == request.deviceInfo()
+            result.get().ipInfo() == request.ipInfo()
+            result.get().user().username() == request.user().username()
     }
 
     def "should retrieve newest request for user multiple requests"() {
@@ -51,6 +54,9 @@ class RequestJpaFT extends Specification {
             var result = requestRepository.retrieveLastEntry(request.user())
 
         then:
-            result.get() == request
+            result.get().date() == request.date()
+            result.get().deviceInfo() == request.deviceInfo()
+            result.get().ipInfo() == request.ipInfo()
+            result.get().user().username() == request.user().username()
     }
 }

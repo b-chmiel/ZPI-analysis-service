@@ -35,8 +35,11 @@ class UserTuple {
     @Column(nullable = true)
     private Date lockoutTill = null;
 
-    UserTuple(User user) {
+    private Date firstLoginDate;
+
+    UserTuple(User user, Date firstLogin) {
         this.username = user.username();
+        this.firstLoginDate = firstLogin;
     }
 
     @Override
@@ -53,6 +56,6 @@ class UserTuple {
     }
 
     public User toDomain() {
-        return new User(username);
+        return new User(username, firstLoginDate);
     }
 }

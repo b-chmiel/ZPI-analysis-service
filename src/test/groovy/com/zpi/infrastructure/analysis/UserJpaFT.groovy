@@ -31,7 +31,7 @@ class UserJpaFT extends Specification {
 
     def "should return empty lockout for non existing user"() {
         given:
-            def user = new User("")
+            def user = new User("", null)
 
         when:
             def result = userRepository.getLockout(user)
@@ -42,7 +42,7 @@ class UserJpaFT extends Specification {
 
     def "should apply not apply lockout on non existing user"() {
         given:
-            def user = new User("")
+            def user = new User("", null)
 
         when:
             userRepository.applyLockout(user, LocalDateTime.now())

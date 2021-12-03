@@ -12,4 +12,8 @@ public interface UserRepository {
     void applyLockout(User user, LocalDateTime till);
 
     Optional<Date> getLockout(User user);
+
+    Optional<Long> userId(User user);
+
+    Optional<User> user(String username);
 }
