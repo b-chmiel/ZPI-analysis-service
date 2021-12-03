@@ -11,9 +11,10 @@ class IncidentDetectionServiceUT extends Specification {
     def incidentRepository = Mock(IncidentRepository)
     def userRepository = Mock(UserRepository)
     def userIncidentsRepository = Mock(UserIncidentsRepository)
+    def countryIncidentsRepository = Mock(CountryIncidentsRepository)
 
     @Subject
-    def service = new IncidentDetectionServiceImpl(requestRepository, incidentRepository, userRepository, userIncidentsRepository)
+    def service = new IncidentDetectionServiceImpl(requestRepository, incidentRepository, userRepository, userIncidentsRepository, countryIncidentsRepository)
 
     def "should detect incident when this is first login"() {
         given:

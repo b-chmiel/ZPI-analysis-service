@@ -6,5 +6,6 @@ import com.zpi.domain.common.User;
 
 public interface AnalysisService {
     AnalysisResponse analyse(AnalysisRequest request);
+
     Lockout lockoutInfo(User user);
 }

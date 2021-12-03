@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @Table(name = "INCIDENT")
 class IncidentTuple {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -37,6 +37,12 @@ class IncidentTuple {
         this.severity = IncidentSeverityTuple.from(incident.getSeverity());
     }
 
+    public static Incident toDomain(IncidentTuple incidentTuple) {
+        var types = incidentTuple.getType().stream().map(IncidentTypeTuple::toDomain).collect(Collectors.toList());
+        var severity = IncidentSeverityTuple.toDomain(incidentTuple.getSeverity());
+        return new Incident(types, severity);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -48,11 +54,5 @@ class IncidentTuple {
     @Override
     public int hashCode() {
         return getClass().hashCode();
-    }
-
-    public static Incident toDomain(IncidentTuple incidentTuple) {
-        var types = incidentTuple.getType().stream().map(IncidentTypeTuple::toDomain).collect(Collectors.toList());
-        var severity = IncidentSeverityTuple.toDomain(incidentTuple.getSeverity());
-        return new Incident(types, severity);
     }
 }

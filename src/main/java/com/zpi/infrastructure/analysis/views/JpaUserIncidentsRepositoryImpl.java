@@ -5,8 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
-import java.util.function.BinaryOperator;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class JpaUserIncidentsRepositoryImpl implements UserIncidentsRepository {

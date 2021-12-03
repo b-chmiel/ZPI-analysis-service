@@ -23,6 +23,7 @@ public class IncidentDetectionServiceImpl implements IncidentDetectionService {
     private final IncidentRepository incidentRepository;
     private final UserRepository userRepository;
     private final UserIncidentsRepository userIncidentsRepository;
+    private final CountryIncidentsRepository countryIncidentsRepository;
 
     @Override
     public Optional<Incident> detect(AnalysisRequest request) {
@@ -129,16 +130,51 @@ public class IncidentDetectionServiceImpl implements IncidentDetectionService {
         return 0;
     }
 
-    private int getTotalElapsed(Date dateStart, LocalDateTime to) {
-        var totalFrom = LocalDateTime.ofInstant(dateStart.toInstant(), ZoneId.systemDefault());
-        return (int) totalFrom.until(to, ChronoUnit.MINUTES);
-    }
-
     private List<IncidentType> detectWhenCountryExceedsLimit(AnalysisRequest request) {
         var from = Timestamp.valueOf(LocalDateTime.now().minusDays(1));
         var incidents = incidentRepository.incidentsFromDateForCountry(request.ipInfo().getCountryName(), from);
 
         var size = incidents == null ? 0 : incidents.size();
-        return size > 10 ? List.of(IncidentType.SUSPICIOUS_COUNTRY) : List.of();
+        return size > countryLimit(request.ipInfo().getCountryName()) ? List.of(IncidentType.SUSPICIOUS_COUNTRY) : List.of();
+    }
+
+    private int countryLimit(String country) {
+        final var defaultLimit = 100;
+        var dateStart = requestRepository.startDate();
+
+        if (dateStart.isPresent()) {
+            var to = LocalDateTime.now();
+            int totalElapsed = getTotalElapsed(dateStart.get(), to);
+
+            if (totalElapsed == 0) {
+                return defaultLimit;
+            }
+
+            var total = countryIncidentsRepository.totalIncidents();
+
+            int limit = total / totalElapsed;
+
+            limit = (limit + getCountryAvgIncidents(dateStart.get(), to, country)) / 2;
+
+            System.out.println("Limit: " + limit);
+            return limit;
+        }
+
+        return defaultLimit;
+    }
+
+    private int getCountryAvgIncidents(Date from, LocalDateTime to, String country) {
+        var elapsed = getTotalElapsed(from, to);
+
+        if (elapsed == 0) {
+            return 0;
+        }
+
+        return countryIncidentsRepository.incidentsForCountry(country) / elapsed;
+    }
+
+    private int getTotalElapsed(Date dateStart, LocalDateTime to) {
+        var totalFrom = LocalDateTime.ofInstant(dateStart.toInstant(), ZoneId.systemDefault());
+        return (int) totalFrom.until(to, ChronoUnit.MINUTES);
     }
 }

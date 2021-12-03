@@ -3,6 +3,7 @@ package com.zpi.infrastructure.common;
 import com.zpi.infrastructure.analysis.JpaIncidentRepositoryImpl;
 import com.zpi.infrastructure.analysis.JpaRequestRepositoryImpl;
 import com.zpi.infrastructure.analysis.JpaUserRepositoryImpl;
+import com.zpi.infrastructure.analysis.views.JpaCountryIncidentRepositoryImpl;
 import com.zpi.infrastructure.analysis.views.JpaUserIncidentsRepositoryImpl;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
@@ -33,6 +34,11 @@ public class JpaDBConfiguration {
     @Bean
     JpaUserRepositoryImpl userRepository(JpaUserRepositoryImpl.JpaUserRepo jpa) {
         return new JpaUserRepositoryImpl(jpa);
+    }
+
+    @Bean
+    JpaCountryIncidentRepositoryImpl countryRepository(JpaCountryIncidentRepositoryImpl.JpaCountryIncidentsRepo jpa) {
+        return new JpaCountryIncidentRepositoryImpl(jpa);
     }
 
     @Bean

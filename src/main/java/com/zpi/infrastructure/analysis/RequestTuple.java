@@ -19,7 +19,7 @@ import java.util.Objects;
 @Table(name = "REQUEST_METADATA")
 class RequestTuple {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(cascade = CascadeType.ALL)

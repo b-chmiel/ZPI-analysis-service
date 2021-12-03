@@ -19,7 +19,7 @@ import java.util.Objects;
 @Table(name = "USER_INFO")
 class UserTuple {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true, nullable = false)
