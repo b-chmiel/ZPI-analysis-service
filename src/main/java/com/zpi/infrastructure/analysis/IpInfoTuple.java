@@ -20,7 +20,7 @@ import java.util.Objects;
 @Table(name = "IP_INFO")
 class IpInfoTuple {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true, nullable = false)

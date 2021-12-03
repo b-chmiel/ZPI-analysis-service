@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.util.Streamable;
 
+import java.util.Date;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -20,7 +21,7 @@ public class JpaRequestRepositoryImpl implements RequestRepository {
     public void save(AnalysisRequest request) {
         var userTuple = userRepo.findByUsername(request.user().username());
         if (userTuple.isEmpty()) {
-            userTuple = Optional.of(userRepo.save(new UserTuple(request.user())));
+            userTuple = Optional.of(userRepo.save(new UserTuple(request.user(), request.date())));
         }
 
         var ipInfoTuple = ipInfoRepo.findByFingerprint(request.ipInfo().getFingerprint());
@@ -52,6 +53,13 @@ public class JpaRequestRepositoryImpl implements RequestRepository {
                 .map(RequestTuple::toDomain).stream().findFirst();
     }
 
+    @Override
+    public Optional<Date> startDate() {
+        return requestRepo
+                .findTopByOrderByDatetimeAsc()
+                .map(RequestTuple::getDatetime);
+    }
+
     public interface JpaUserRepo extends JpaRepository<UserTuple, Long> {
         Optional<UserTuple> findByUsername(String username);
     }
@@ -66,5 +74,7 @@ public class JpaRequestRepositoryImpl implements RequestRepository {
 
     public interface JpaRequestRepo extends JpaRepository<RequestTuple, Long> {
         Streamable<RequestTuple> findFirstByUserOrderByIdDesc(UserTuple user);
+
+        Optional<RequestTuple> findTopByOrderByDatetimeAsc();
     }
 }

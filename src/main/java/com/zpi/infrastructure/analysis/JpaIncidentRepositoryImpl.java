@@ -2,10 +2,13 @@ package com.zpi.infrastructure.analysis;
 
 import com.zpi.domain.analysis.twoFactor.incident.Incident;
 import com.zpi.domain.analysis.twoFactor.incident.IncidentRepository;
+import com.zpi.domain.analysis.twoFactor.incident.IncidentType;
 import com.zpi.domain.common.AnalysisRequest;
 import com.zpi.domain.common.User;
 import com.zpi.domain.report.RequestIncident;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.util.Streamable;
 
@@ -21,11 +24,16 @@ public class JpaIncidentRepositoryImpl implements IncidentRepository {
     private final JpaRequestRepositoryImpl requestRepository;
     private final JpaUserRepo userRepo;
 
+    Logger logger = LoggerFactory.getLogger(JpaIncidentRepositoryImpl.class);
+
     @Override
     public void save(Incident incident, AnalysisRequest request) {
         requestRepository.save(request);
         var requestTuple = requestRepo.findByDatetime(request.date());
         incidentRepo.save(new IncidentTuple(incident, requestTuple.orElseThrow()));
+        logger.info(
+                incident.getType().stream().map(IncidentType::getName).collect(Collectors.joining(" "))
+        );
     }
 
     @Override

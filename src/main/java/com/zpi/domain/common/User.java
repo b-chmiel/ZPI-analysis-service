@@ -1,5 +1,7 @@
 package com.zpi.domain.common;
 
-public record User(String username) {
+import java.util.Date;
+
+public record User(String username, Date from) {
 }
 

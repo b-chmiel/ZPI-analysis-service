@@ -12,6 +12,6 @@ public class UserDTO {
     private String login;
 
     public User toDomain() {
-        return new User(login);
+        return new User(login, null);
     }
 }

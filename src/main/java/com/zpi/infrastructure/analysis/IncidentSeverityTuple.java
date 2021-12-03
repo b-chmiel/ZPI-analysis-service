@@ -18,6 +18,6 @@ enum IncidentSeverityTuple {
     }
 
     static IncidentSeverity toDomain(IncidentSeverityTuple severity) {
-       return IncidentSeverity.valueOf(severity.getName());
+        return IncidentSeverity.valueOf(severity.getName());
     }
 }

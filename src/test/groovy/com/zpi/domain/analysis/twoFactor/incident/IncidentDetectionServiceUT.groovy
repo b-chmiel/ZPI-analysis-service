@@ -10,9 +10,11 @@ class IncidentDetectionServiceUT extends Specification {
     def requestRepository = Mock(RequestRepository)
     def incidentRepository = Mock(IncidentRepository)
     def userRepository = Mock(UserRepository)
+    def userIncidentsRepository = Mock(UserIncidentsRepository)
+    def countryIncidentsRepository = Mock(CountryIncidentsRepository)
 
     @Subject
-    def service = new IncidentDetectionServiceImpl(requestRepository, incidentRepository, userRepository)
+    def service = new IncidentDetectionServiceImpl(requestRepository, incidentRepository, userRepository, userIncidentsRepository, countryIncidentsRepository)
 
     def "should detect incident when this is first login"() {
         given:
@@ -38,6 +40,7 @@ class IncidentDetectionServiceUT extends Specification {
             userRepository.getLockout(request.user()) >> Optional.empty()
             incidentRepository.lastIncident(request.user()) >> Optional.empty()
             requestRepository.retrieveLastEntry(request.user()) >> Optional.of(request)
+            requestRepository.startDate() >> Optional.of(new Date())
 
         when:
             def result = service.detect(request)
@@ -55,6 +58,7 @@ class IncidentDetectionServiceUT extends Specification {
             userRepository.getLockout(request.user()) >> Optional.empty()
             incidentRepository.lastIncident(request.user()) >> Optional.of(incident)
             requestRepository.retrieveLastEntry(request.user()) >> Optional.of(request)
+            requestRepository.startDate() >> Optional.of(new Date())
 
         when:
             def result = service.detect(request)
@@ -74,6 +78,7 @@ class IncidentDetectionServiceUT extends Specification {
             userRepository.getLockout(request.user()) >> Optional.empty()
             incidentRepository.lastIncident(request.user()) >> Optional.of(incident)
             requestRepository.retrieveLastEntry(request.user()) >> Optional.of(request)
+            requestRepository.startDate() >> Optional.of(new Date())
 
         when:
             def result = service.detect(request)
@@ -91,6 +96,7 @@ class IncidentDetectionServiceUT extends Specification {
             userRepository.getLockout(request.user()) >> Optional.empty()
             incidentRepository.lastIncident(request.user()) >> Optional.empty()
             requestRepository.retrieveLastEntry(request.user()) >> Optional.of(last)
+            requestRepository.startDate() >> Optional.of(new Date())
 
         when:
             def result = service.detect(request)
@@ -109,6 +115,7 @@ class IncidentDetectionServiceUT extends Specification {
             userRepository.getLockout(request.user()) >> Optional.empty()
             incidentRepository.lastIncident(request.user()) >> Optional.empty()
             requestRepository.retrieveLastEntry(request.user()) >> Optional.of(last)
+            requestRepository.startDate() >> Optional.of(new Date())
 
         when:
             def result = service.detect(request)
@@ -127,6 +134,7 @@ class IncidentDetectionServiceUT extends Specification {
             userRepository.getLockout(request.user()) >> Optional.empty()
             incidentRepository.lastIncident(request.user()) >> Optional.empty()
             requestRepository.retrieveLastEntry(request.user()) >> Optional.of(last)
+            requestRepository.startDate() >> Optional.of(new Date())
 
         when:
             def result = service.detect(request)
@@ -144,6 +152,7 @@ class IncidentDetectionServiceUT extends Specification {
             userRepository.getLockout(request.user()) >> Optional.of(new Date())
             incidentRepository.lastIncident(request.user()) >> Optional.empty()
             requestRepository.retrieveLastEntry(request.user()) >> Optional.of(request)
+            requestRepository.startDate() >> Optional.of(new Date())
 
         when:
             def result = service.detect(request)
