@@ -86,7 +86,7 @@ public class IncidentDetectionServiceImpl implements IncidentDetectionService {
     }
 
     private int userLimit(String username) {
-        final var defaultLimit = 100;
+        final var defaultLimit = 3;
         var dateStart = requestRepository.startDate();
 
         if (dateStart.isPresent()) {
@@ -106,8 +106,8 @@ public class IncidentDetectionServiceImpl implements IncidentDetectionService {
                 limit = (limit + getUserAvgIncidents(to, user)) / 2;
             }
 
-            System.out.println("Limit: " + limit);
-            return limit;
+            System.out.println("User limit: " + limit);
+            return Math.max(limit, defaultLimit);
         }
 
         return defaultLimit;
@@ -156,8 +156,8 @@ public class IncidentDetectionServiceImpl implements IncidentDetectionService {
 
             limit = (limit + getCountryAvgIncidents(dateStart.get(), to, country)) / 2;
 
-            System.out.println("Limit: " + limit);
-            return limit;
+            System.out.println("Country limit: " + limit);
+            return Math.max(limit, defaultLimit);
         }
 
         return defaultLimit;
